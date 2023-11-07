@@ -1,0 +1,44 @@
+#include <iostream>
+#include <vector>
+#include "Maze.h"
+
+Cell::Cell(int x, int y, bool border_left, bool border_up, bool border_right, bool border_down) :
+        x(x), y(y), borders{border_left, border_up, border_right, border_down}{
+    for (int i = 0; i < 4; i++) {
+        if (borders[i]) {
+            directionsIndex[numBorders] = static_cast<Direction>(i);;
+            numBorders++;
+        }
+    }
+
+}
+
+Maze::Maze(bool *image, int w, int h) : width(w), height(h) {
+    for (int x; x < w; x++) {
+        for (int y; y < h; y++) {
+            cells.push_back(Cell(x, y, false, false, false, false));
+        }
+    }
+}
+
+Cell Maze::move(Cell cell, Direction direction) {
+    if (cell.borders[direction]) {
+        switch (direction) {
+            case left:
+                return getCell(cell.x - 1, cell.y);
+            case up:
+                return getCell(cell.x, cell.y - 1);
+            case right:
+                return getCell(cell.x + 1, cell.y);
+            case down:
+                return getCell(cell.x, cell.y + 1);
+        }
+    }
+    throw direction;
+}
+
+Cell Maze::getCell(int x, int y) {
+    return cells[y * width + x];
+}
+
+}
