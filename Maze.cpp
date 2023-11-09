@@ -31,6 +31,13 @@ Cell Maze::move(Cell cell, Direction direction) {
 }
 
 Cell Maze::getCell(int x, int y) {
-    return cells[y * width + x];
+    return cells[x * width + y];
 }
 
+int Maze::getStartX() const {
+    return start_x;
+}
+
+int Maze::getStartY() const {
+    return start_y;
+}

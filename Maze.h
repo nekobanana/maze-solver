@@ -27,13 +27,21 @@ public:
     Cell move(Cell cell, Direction direction);
     void load_maze_from_image(std::string filename);
 
+    int getStartX() const;
+
+    int getStartY() const;
+
 private:
     std::vector<Cell> cells;
     int width{0}, height{0};
+    int start_x, start_y;
+    bool start_set = false;
     Cell getCell(int x, int y);
 
     void
     analyze_borders_x(const cv::Mat &image, std::vector<int> &border_sizes_x, std::vector<int> &cell_sizes_x) const;
+
+    Cell* getStartCell();
 };
 
 #endif //MAZE_SOLVER_MAZE_H

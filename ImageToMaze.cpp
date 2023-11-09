@@ -32,6 +32,46 @@ void Maze::load_maze_from_image(std::string filename) {
             this->cells.push_back(Cell(x, y, border_left, border_up, border_right, border_down));
         }
     }
+    //find a start cell
+    this->start_set = false;
+    for (int x = 0; x < this->width; x++) {
+        if (!getCell(x, 0).borders[Direction::up]) {
+            this->start_x = x;
+            this->start_y = 0;
+            start_set = true;
+            break;
+        }
+    }
+    if (!start_set) {
+        for (int y = 0; y < this->height; y++) {
+            if (!getCell(0, y).borders[Direction::left]) {
+                this->start_x = 0;
+                this->start_y = y;
+                start_set = true;
+                break;
+            }
+        }
+    }
+    if (!start_set) {
+        for (int x = 0; x < this->width; x++) {
+            if (!getCell(x, this->height - 1).borders[Direction::down]) {
+                this->start_x = x;
+                this->start_y = this->height - 1;
+                start_set = true;
+                break;
+            }
+        }
+    }
+    if (!start_set) {
+        for (int y = 0; y < this->height; y++) {
+            if (!getCell(this->width - 1, y).borders[Direction::right]) {
+                this->start_x = this->width - 1;
+                this->start_y = y;
+                start_set = true;
+                break;
+            }
+        }
+    }
 }
 
 void Maze::analyze_borders_x(const Mat &image, std::vector<int> &border_sizes_x, std::vector<int> &cell_sizes_x) const {
