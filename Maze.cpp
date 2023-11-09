@@ -13,13 +13,6 @@ Cell::Cell(int x, int y, bool border_left, bool border_up, bool border_right, bo
 
 }
 
-Maze::Maze(bool *image, int w, int h) : width(w), height(h) {
-    for (int x; x < w; x++) {
-        for (int y; y < h; y++) {
-            cells.push_back(Cell(x, y, false, false, false, false));
-        }
-    }
-}
 
 Cell Maze::move(Cell cell, Direction direction) {
     if (cell.borders[direction]) {
@@ -41,4 +34,3 @@ Cell Maze::getCell(int x, int y) {
     return cells[y * width + x];
 }
 
-}

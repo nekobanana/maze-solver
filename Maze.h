@@ -22,9 +22,8 @@ private:
 
 class Maze {
 public:
-    Maze(bool image[], int w, int h);
     Cell move(Cell cell, Direction direction);
-
+    void load_maze_from_image(std::string filename);
 
 private:
     std::vector<Cell> cells;
