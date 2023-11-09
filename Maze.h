@@ -6,6 +6,8 @@
 #define MAZE_SOLVER_MAZE_H
 
 #include <vector>
+#include <opencv2/core/mat.hpp>
+#include <map>
 
 enum Direction {left, up, right, down};
 
@@ -30,6 +32,8 @@ private:
     int width{0}, height{0};
     Cell getCell(int x, int y);
 
+    void
+    analyze_borders_x(const cv::Mat &image, std::vector<int> &border_sizes_x, std::vector<int> &cell_sizes_x) const;
 };
 
 #endif //MAZE_SOLVER_MAZE_H

@@ -6,12 +6,10 @@
 
 int main() {
 
-    std::filesystem::path basePath = std::filesystem::path("/home/quacksort/CLionProjects/maze_solver");
+    std::filesystem::path basePath = std::filesystem::current_path();
     std::filesystem::path imgPath = std::filesystem::relative("images/0.png");
     Maze maze;
-    std::cout<<"aaaaaaaaaaaaaaa"<<std::endl;
-    std::flush(std::cout);
-    maze.load_maze_from_image(absolute((basePath / imgPath)));
+    maze.load_maze_from_image((basePath / imgPath).string());
 
     return 0;
 }
