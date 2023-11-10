@@ -6,6 +6,8 @@
 
 #define N_PARTICLES 100
 
+std::string pathToString(std::vector<std::pair<int, int>> &path);
+
 int main() {
     #ifdef _OPENMP
         std::cout << "_OPENMP defined" << std::endl;
@@ -18,7 +20,7 @@ int main() {
     if (!maze.isStartSet())
         return -1;
     Cell startCell = maze.getStartCell();
-    #pragma omp for
+    #pragma omp parallel for default(none), firstprivate(startCell, rng), shared(maze, std::cout)
     for (int i = 0; i < N_PARTICLES; i++) {
         Cell cell = startCell;
         std::vector<std::pair<int, int>> path;
@@ -36,11 +38,16 @@ int main() {
         std::string s = "Thread " + std::to_string(omp_get_thread_num()) +
                 ", particle " + std::to_string(i) + ": ";
 //        std::string s = "Particle " + std::to_string(i) + ": ";
-        for (auto p: path) {
-            s += "(" + std::to_string(p.first) + ", " + std::to_string(p.second) + "), ";
-        }
-        s += "\n";
+//        s = s.append(pathToString(path) + "\n");
         std::cout << s << std::endl;
     }
     return 0;
+}
+
+std::string pathToString(std::vector<std::pair<int, int>> &path) {
+    std::string s;
+    for (auto p: path) {
+        s.append("(" + std::to_string(p.first) + ", " + std::to_string(p.second) + "), ");
+    }
+    return s;
 }
