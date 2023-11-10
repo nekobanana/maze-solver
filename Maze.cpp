@@ -29,6 +29,8 @@ Cell Maze::move(Cell cell, Direction direction) {
             return getCell(cell.x + 1, cell.y);
         case down:
             return getCell(cell.x, cell.y + 1);
+        default:
+            throw direction;
     }
 }
 
