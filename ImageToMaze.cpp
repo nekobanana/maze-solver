@@ -34,11 +34,13 @@ void Maze::load_maze_from_image(std::string filename) {
     }
     //find a start cell
     this->start_set = false;
+    Direction start_cell_entrance_direction;
     for (int x = 0; x < this->width; x++) {
         if (!getCell(x, 0).borders[Direction::up]) {
             this->start_x = x;
             this->start_y = 0;
             start_set = true;
+            start_cell_entrance_direction = Direction::up;
             break;
         }
     }
@@ -48,6 +50,7 @@ void Maze::load_maze_from_image(std::string filename) {
                 this->start_x = 0;
                 this->start_y = y;
                 start_set = true;
+                start_cell_entrance_direction = Direction::left;
                 break;
             }
         }
@@ -58,6 +61,7 @@ void Maze::load_maze_from_image(std::string filename) {
                 this->start_x = x;
                 this->start_y = this->height - 1;
                 start_set = true;
+                start_cell_entrance_direction = Direction::down;
                 break;
             }
         }
@@ -68,10 +72,17 @@ void Maze::load_maze_from_image(std::string filename) {
                 this->start_x = this->width - 1;
                 this->start_y = y;
                 start_set = true;
+                start_cell_entrance_direction = Direction::right;
                 break;
             }
         }
     }
+    Cell start = getCell(start_x, start_y);
+    cells[start_x * width + start_y] = Cell(start.x, start.y,
+                                            start.borders[0] || (start_cell_entrance_direction == 0),
+                                            start.borders[1] || (start_cell_entrance_direction == 1),
+                                            start.borders[2] || (start_cell_entrance_direction == 2),
+                                            start.borders[3] || (start_cell_entrance_direction == 3));
 }
 
 void Maze::analyze_borders_x(const Mat &image, std::vector<int> &border_sizes_x, std::vector<int> &cell_sizes_x) const {
