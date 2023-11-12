@@ -1,30 +1,34 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
+#include <filesystem>
 #include "Maze.h"
 
 using namespace cv;
 
 void Maze::load_maze_from_image(std::string filename) {
-    Mat orig = imread(filename, IMREAD_GRAYSCALE);
+    image_name = std::filesystem::path(filename).filename();
+    orig_image = imread(filename, IMREAD_GRAYSCALE);
+    image_width = orig_image.rows;
+    image_height = orig_image.cols;
     Mat image;
-    threshold(orig, image, 127, 255, THRESH_BINARY);
+    threshold(orig_image, image, 127, 255, THRESH_BINARY);
 
     std::vector<int> border_sizes_x, cell_sizes_x, border_sizes_y, cell_sizes_y;
     analyze_borders_x(image, border_sizes_x, cell_sizes_x);
     analyze_borders_x(image.t(), border_sizes_y, cell_sizes_y);
-    int border_size_x = *std::min_element(border_sizes_x.begin(), border_sizes_x.end());
-    int border_size_y = *std::min_element(border_sizes_y.begin(), border_sizes_y.end());
-    int cell_size_x = *std::min_element(cell_sizes_x.begin(), cell_sizes_x.end());
-    int cell_size_y = *std::min_element(cell_sizes_y.begin(), cell_sizes_y.end());
-    int cells_per_row = (image.cols - border_size_x) / (cell_size_x + border_size_x);
-    int cells_per_col = (image.rows - border_size_y) / (cell_size_y + border_size_y);
-    this->width = cells_per_row;
-    this->height = cells_per_col;
+    border_size_x = *std::min_element(border_sizes_x.begin(), border_sizes_x.end());
+    border_size_y = *std::min_element(border_sizes_y.begin(), border_sizes_y.end());
+    cell_size_x = *std::min_element(cell_sizes_x.begin(), cell_sizes_x.end());
+    cell_size_y = *std::min_element(cell_sizes_y.begin(), cell_sizes_y.end());
+    int cells_per_row = (image_height - border_size_x) / (cell_size_x + border_size_x);
+    int cells_per_col = (image_width - border_size_y) / (cell_size_y + border_size_y);
+    width = cells_per_row;
+    height = cells_per_col;
     for (int x = 0; x < cells_per_row; x++) {
         for (int y = 0; y < cells_per_col; y++) {
             int cell_center_x = x * (cell_size_x + border_size_x) + border_size_x + cell_size_x / 2;
             int cell_center_y = y * (cell_size_y + border_size_y) + border_size_y + cell_size_y / 2;
-            assert(image.data[image.step * cell_center_y + cell_center_x] == 255);
+//            assert(image.data[image.step * cell_center_y + cell_center_x] == 255);
             bool border_up = image.data[image.step * (cell_center_y - ((border_size_y + cell_size_y) / 2)) + cell_center_x] == 0;
             bool border_left = image.data[image.step * cell_center_y + cell_center_x - ((border_size_x + cell_size_x) / 2)] == 0;
             bool border_down = image.data[image.step * (cell_center_y + ((border_size_y + cell_size_y) / 2)) + cell_center_x] == 0;
@@ -78,7 +82,7 @@ void Maze::load_maze_from_image(std::string filename) {
         }
     }
     Cell start = getCell(start_x, start_y);
-    cells[start_x * width + start_y] = Cell(start.x, start.y,
+    cells[start_x * height + start_y] = Cell(start.x, start.y,
                                             start.borders[0] || (start_cell_entrance_direction == 0),
                                             start.borders[1] || (start_cell_entrance_direction == 1),
                                             start.borders[2] || (start_cell_entrance_direction == 2),

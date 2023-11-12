@@ -37,7 +37,7 @@ Cell Maze::move(Cell cell, Direction direction) {
 Cell Maze::getCell(int x, int y) {
     if (x >= width || y >= height)
         throw OutOfMazeException();
-    return cells[x * width + y];
+    return cells[x * height + y];
 }
 
 bool Maze::isStartSet() const {

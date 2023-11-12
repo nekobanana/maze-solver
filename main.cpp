@@ -14,18 +14,19 @@ int main() {
     #endif
     cv::RNG rng( 0 );
     std::filesystem::path basePath = std::filesystem::current_path();
-    std::filesystem::path imgPath = std::filesystem::relative("images/0.png");
+    std::filesystem::path imgPath = std::filesystem::relative("images/5.png");
     Maze maze;
     maze.load_maze_from_image((basePath / imgPath).string());
     if (!maze.isStartSet())
         return -1;
     Cell startCell = maze.getStartCell();
-    #pragma omp parallel for default(none), firstprivate(startCell, rng), shared(maze, std::cout)
+    bool solution_found = false;
+    #pragma omp parallel for default(none), firstprivate(startCell, rng), shared(solution_found, maze, std::cout)
     for (int i = 0; i < N_PARTICLES; i++) {
         Cell cell = startCell;
         std::vector<std::pair<int, int>> path;
         bool out = false;
-        while (!out) {
+        while (!out && !solution_found) {
             path.push_back(std::pair(cell.x, cell.y));
             int random = rng.uniform(0, cell.numPossibleDirections);
             try {
@@ -33,13 +34,17 @@ int main() {
             }
             catch (OutOfMazeException &e) {
                 out = true;
+                solution_found = true;
             }
         }
-        std::string s = "Thread " + std::to_string(omp_get_thread_num()) +
-                ", particle " + std::to_string(i) + ": ";
-//        std::string s = "Particle " + std::to_string(i) + ": ";
-//        s = s.append(pathToString(path) + "\n");
-        std::cout << s << std::endl;
+        if (out) {
+            #ifdef _OPENMP
+            std::cout << "Thread " << omp_get_thread_num() << ", particle " << i << std::endl;
+            #else
+            std::cout << "Particle " << i << std::endl;
+            #endif
+            maze.save_solution_image(path);
+        }
     }
     return 0;
 }

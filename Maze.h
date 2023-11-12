@@ -28,13 +28,18 @@ public:
 
     bool isStartSet() const;
     Cell getCell(int x, int y);
+    void save_solution_image(const std::vector<std::pair<int, int>>& points);
 
 private:
     std::vector<Cell> cells;
     int width{0}, height{0};
+    int image_width{0}, image_height{0};
+    int border_size_x{0}, border_size_y{0}, cell_size_x{0}, cell_size_y{0};
     int start_x, start_y;
     bool start_set = false;
-
+    cv::Mat orig_image;
+    std::string image_name;
+    std::string output_folder = "solutions";
     void
     analyze_borders_x(const cv::Mat &image, std::vector<int> &border_sizes_x, std::vector<int> &cell_sizes_x) const;
 };
