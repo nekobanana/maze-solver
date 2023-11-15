@@ -7,6 +7,7 @@
 #ifdef _OPENMP
 #define N_PARTICLES 100
 #define getThreadNumber() omp_get_thread_num()
+#define N_THREADS 8
 #else
 #define N_PARTICLES 1
 #define getThreadNumber() (-1)
@@ -36,7 +37,7 @@ int main() {
             int solution_thread_n = -1;
 //            double startTime = omp_get_wtime();
             auto startTime = std::chrono::high_resolution_clock::now();
-            #pragma omp parallel for default(none), firstprivate(startCell, rng), \
+            #pragma omp parallel for num_threads(N_THREADS) default(none), firstprivate(startCell, rng), \
             shared(solution_found, solution_thread_n, maze, std::cout, startTime, run, maze_sum_run_time)
             for (int i = 0; i < N_PARTICLES; i++) {
 //                double endTime = 0;
@@ -45,8 +46,8 @@ int main() {
                 std::vector<std::pair<int, int>> path;
                 bool out = false;
                 while (!out && !solution_found) {
-                    path.push_back(std::pair(cell.x, cell.y));
-                    int random = rng.uniform(0, cell.numPossibleDirections);
+                    path.push_back(std::pair(cell.getX(), cell.getY()));
+                    int random = rng.uniform(0, cell.getPossibleDirectionsCount());
                     try {
                         cell = maze.move(cell, cell.getDirectionFromIndex(random));
                     }

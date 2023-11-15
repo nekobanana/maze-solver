@@ -7,28 +7,43 @@ Cell::Cell(int x, int y, bool border_left, bool border_up, bool border_right, bo
     for (int i = 0; i < 4; i++) {
         directionsIndex[i] = Direction::null;
         if (!borders[i]) {
-            directionsIndex[numPossibleDirections] = static_cast<Direction>(i);
-            numPossibleDirections++;
+            directionsIndex[possibleDirectionsCount] = static_cast<Direction>(i);
+            possibleDirectionsCount++;
         }
     }
 
 }
 
+int Cell::getPossibleDirectionsCount() const {
+    return possibleDirectionsCount;
+}
+
+int Cell::getX() const {
+    return x;
+}
+
+int Cell::getY() const {
+    return y;
+}
 Direction Cell::getDirectionFromIndex(int idx) {
     return directionsIndex[idx];
 }
 
+bool Cell::hasBorder(Direction direction) {
+    return borders[direction];
+}
+
 Cell Maze::move(Cell cell, Direction direction) {
-    if (cell.borders[direction]) throw direction;
+    if (cell.hasBorder(direction)) throw direction;
     switch (direction) {
         case left:
-            return getCell(cell.x - 1, cell.y);
+            return getCell(cell.getX() - 1, cell.getY());
         case up:
-            return getCell(cell.x, cell.y - 1);
+            return getCell(cell.getX(), cell.getY() - 1);
         case right:
-            return getCell(cell.x + 1, cell.y);
+            return getCell(cell.getX() + 1, cell.getY());
         case down:
-            return getCell(cell.x, cell.y + 1);
+            return getCell(cell.getX(), cell.getY() + 1);
         default:
             throw direction;
     }

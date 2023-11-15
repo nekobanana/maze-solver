@@ -10,22 +10,31 @@ enum Direction {left, up, right, down, null=-1};
 class Cell {
 public:
     Cell(int x, int y, bool border_left, bool border_up, bool border_right, bool border_down);
+    Direction getDirectionFromIndex(int idx);
+
+    int getX() const;
+
+    int getY() const;
+
+    int getPossibleDirectionsCount() const;
+    bool hasBorder(Direction direction);
+
+private:
     int x;
     int y;
-    int numPossibleDirections = 0;
+    int possibleDirectionsCount = 0;
     bool borders[4];
-    Direction getDirectionFromIndex(int idx);
-private:
     Direction directionsIndex[4]{};
 };
+
+
+
 
 class Maze {
 public:
     Cell move(Cell cell, Direction direction);
     void load_maze_from_image(std::string filename);
-
     Cell getStartCell();
-
     bool isStartSet() const;
     Cell getCell(int x, int y);
     void save_solution_image(const std::vector<std::pair<int, int>>& points);
