@@ -72,7 +72,7 @@ int main() {
             }
         }
         std::cout << "Maze " << maze_index << " average run time:" << maze_sum_run_time / N_RUNS << std::endl;
-        mazes_total_sum_run_time += maze_sum_run_time;
+        mazes_total_sum_run_time += maze_sum_run_time / N_RUNS;
     }
     std::cout << std::endl << "Mazes total average run time:" << mazes_total_sum_run_time / N_MAZES << std::endl;
     return 0;
