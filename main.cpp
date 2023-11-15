@@ -34,11 +34,11 @@ int main() {
         std::cout <<std::endl << "Maze " << maze_index << std::endl;
         for (int run = 0; run < N_RUNS; run++) {
             bool solution_found = false;
-            int solution_thread_n = -1;
+            bool solution_found_lock = false;
 //            double startTime = omp_get_wtime();
             auto startTime = std::chrono::high_resolution_clock::now();
             #pragma omp parallel for num_threads(N_THREADS) default(none), firstprivate(startCell, rng), \
-            shared(solution_found, solution_thread_n, maze, std::cout, startTime, run, maze_sum_run_time)
+            shared(solution_found, solution_found_lock, maze, std::cout, startTime, run, maze_sum_run_time)
             for (int i = 0; i < N_PARTICLES; i++) {
 //                double endTime = 0;
                 auto endTime = startTime;
@@ -54,20 +54,26 @@ int main() {
                     catch (OutOfMazeException &e) {
                         out = true;
                         solution_found = true;
+                        bool has_lock = false;
 //                        endTime = omp_get_wtime();
-                        endTime = std::chrono::high_resolution_clock::now();
-                        solution_thread_n = getThreadNumber();
-                    }
-                }
-                if (out && solution_thread_n == getThreadNumber())
-                {
-                    std::cout << "Thread " << getThreadNumber() << ", particle " << i;
+                        #pragma omp critical
+                        {
+                            if (!solution_found_lock) {
+                                solution_found_lock = true;
+                                has_lock = true;
+                            }
+                        }
+                        if (has_lock) {
+                            endTime = std::chrono::high_resolution_clock::now();
+                            std::cout << "Run " << run << ", Thread " << getThreadNumber() << ", particle " << i;
 //                    std::cout << "\t " << endTime - startTime << "s" << std::endl;
-                    double s = (double)std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count() / 1000000000;
-                    std::cout << "\t " << s << "s" << std::endl;
-                    maze_sum_run_time += s;
-                    if (SAVE_SOLUTION_IMG && run == N_RUNS - 1) {
-                        maze.save_solution_image(path);
+                            double s = (double)std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count() / 1000000000;
+                            std::cout << "\t " << s << "s" << std::endl;
+                            maze_sum_run_time += s;
+                            if (SAVE_SOLUTION_IMG && run == N_RUNS - 1) {
+                                maze.save_solution_image(path);
+                            }
+                        }
                     }
                 }
             }
