@@ -20,8 +20,8 @@ void Maze::load_maze_from_image(std::string filename) {
     border_size_y = *std::min_element(border_sizes_y.begin(), border_sizes_y.end());
     cell_size_x = *std::min_element(cell_sizes_x.begin(), cell_sizes_x.end());
     cell_size_y = *std::min_element(cell_sizes_y.begin(), cell_sizes_y.end());
-    int cells_per_row = (image_height - border_size_x) / (cell_size_x + border_size_x);
-    int cells_per_col = (image_width - border_size_y) / (cell_size_y + border_size_y);
+    cells_per_row = (image_height - border_size_x) / (cell_size_x + border_size_x);
+    cells_per_col = (image_width - border_size_y) / (cell_size_y + border_size_y);
     width = cells_per_row;
     height = cells_per_col;
     for (int x = 0; x < cells_per_row; x++) {
