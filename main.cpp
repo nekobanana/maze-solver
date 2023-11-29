@@ -12,7 +12,6 @@
 #define N_PARTICLES 1
 #define getThreadNumber() (-1)
 #endif
-
 #define N_MAZES 7
 #define N_RUNS 100
 #define SAVE_SOLUTION_IMG false
@@ -33,16 +32,16 @@ int main() {
         Cell startCell = maze.getStartCell();
         double maze_sum_run_time = 0;
         std::cout <<std::endl << "Maze " << maze_index << ", "
-        << maze.getCellsPerRow() << " x " << maze.getCellsPerCol() << std::endl;
+            << maze.getCellsPerRow() << "x" << maze.getCellsPerCol() << std::endl;
         for (int run = 0; run < N_RUNS; run++) {
             bool solution_found = false;
             bool solution_found_lock = false;
-//          double startTime = omp_get_wtime();
+//            double startTime = omp_get_wtime();
             auto startTime = std::chrono::high_resolution_clock::now();
             #pragma omp parallel for num_threads(N_THREADS) default(none), firstprivate(startCell, rng), \
             shared(solution_found, solution_found_lock, maze, std::cout, startTime, run, maze_sum_run_time)
             for (int i = 0; i < N_PARTICLES; i++) {
-//              double endTime = 0;
+//                double endTime = 0;
                 auto endTime = startTime;
                 Cell cell = startCell;
                 std::vector<std::pair<int, int>> path;
@@ -57,7 +56,7 @@ int main() {
                         out = true;
                         solution_found = true;
                         bool has_lock = false;
-//                      endTime = omp_get_wtime();
+//                        endTime = omp_get_wtime();
                         #pragma omp critical
                         {
                             if (!solution_found_lock) {
