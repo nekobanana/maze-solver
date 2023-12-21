@@ -23,9 +23,12 @@ int main(int argc, char* argv[]) {
     int n_particles = get_arg("p", argc, argv);
     int n_threads = get_arg("t", argc, argv);
     int n_runs = get_arg("r", argc, argv);
-    int save_solution = get_arg("s", argc, argv);
+    const int save_solution = get_arg("s", argc, argv);
     if (n_threads == 0) n_threads = 1;
     if (n_runs == 0) n_runs = 100;
+    #ifndef _OPENMP
+    n_particles = 1;
+    #endif
     std::string out_file_nme = std::string("results/") + std::to_string(n_threads) +  std::string("_threads_") + \
         std::to_string(n_particles) + std::string("_p.txt");
 
@@ -64,10 +67,14 @@ int main(int argc, char* argv[]) {
             for (int i = 0; i < n_particles; i++) {
                 auto endTime = startTime;
                 Cell cell = startCell;
-                std::list<std::pair<int, int>> path;
+                std::list<unsigned short> particle_path_x;
+                std::list<unsigned short> particle_path_y;
                 bool out = false;
                 while (!out && !solution_found) {
-                    path.emplace_back(cell.getX(), cell.getY());
+                    if (save_solution) {
+                        particle_path_x.emplace_back(cell.getX());
+                        particle_path_y.emplace_back(cell.getY());
+                    }
                     int random = rng.uniform(0, cell.getPossibleDirectionsCount());
                     try {
                         cell = maze.move(cell, cell.getDirectionFromIndex(random));
@@ -90,7 +97,7 @@ int main(int argc, char* argv[]) {
                             std::cout << "\t " << s << "s" << std::endl;
                             maze_sum_run_time += s;
                             if (save_solution && run == n_runs - 1) {
-                                maze.save_solution_image(path);
+                                maze.save_solution_image(particle_path_x, particle_path_y);
                             }
                         }
                     }
