@@ -3,7 +3,7 @@
 #include <filesystem>
 #include "Maze.h"
 
-void Maze::save_solution_image(const std::vector<std::pair<int, int>>& points) {
+void Maze::save_solution_image(const std::list<std::pair<int, int>>& points) {
     cv::Mat image = orig_image.clone();
     cv::cvtColor(orig_image, image, cv::COLOR_GRAY2BGR);
     int thickness = 2;

@@ -4,6 +4,7 @@
 #include <vector>
 #include <opencv2/core/mat.hpp>
 #include <map>
+#include <list>
 
 enum Direction {left, up, right, down, null=-1};
 
@@ -34,7 +35,7 @@ public:
     Cell getStartCell();
     bool isStartSet() const;
     Cell getCell(int x, int y);
-    void save_solution_image(const std::vector<std::pair<int, int>>& points);
+    void save_solution_image(const std::list<std::pair<int, int>>& points);
     int getCellsPerRow() const;
     int getCellsPerCol() const;
 
