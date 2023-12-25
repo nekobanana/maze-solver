@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <omp.h>
 #include <fstream>
+#include <random>
 
 #ifdef _OPENMP
 #define getThreadNumber() omp_get_thread_num()
@@ -38,8 +39,9 @@ int main(int argc, char* argv[]) {
 
     #ifdef _OPENMP
         std::cout << "_OPENMP defined" << std::endl;
+        omp_lock_t solution_found_write;
+        omp_init_lock(&solution_found_write);
     #endif
-    cv::RNG rng( 0 );
     std::filesystem::path basePath = std::filesystem::current_path();
     std::vector<std::filesystem::path> images;
     for (const auto & entry : std::filesystem::directory_iterator("images/")) {
@@ -59,39 +61,45 @@ int main(int argc, char* argv[]) {
                   << maze.getCellsPerRow() << "x" << maze.getCellsPerCol() << std::endl;
         for (int run = 0; run < n_runs; run++) {
             bool solution_found = false;
-            bool solution_found_lock = false;
+            bool first_to_find_solution = false;
             auto startTime = std::chrono::high_resolution_clock::now();
-            #pragma omp parallel for num_threads(n_threads) default(none), firstprivate(startCell, rng), \
-            shared(solution_found, solution_found_lock, maze, std::cout, startTime, run, maze_sum_run_time, \
-            n_particles, n_runs, save_solution)
+            #pragma omp parallel for num_threads(n_threads) default(none), firstprivate(startCell), \
+            shared(solution_found, first_to_find_solution, maze, std::cout, startTime, run, maze_sum_run_time, \
+            n_particles, n_runs, save_solution, solution_found_write)
             for (int i = 0; i < n_particles; i++) {
                 auto endTime = startTime;
+                std::random_device rd;
+                std::mt19937 rng(rd());
+                std::uniform_real_distribution<> dis(0, 1);
+
                 Cell cell = startCell;
                 std::list<unsigned short> particle_path_x;
                 std::list<unsigned short> particle_path_y;
-                bool out = false;
-                while (!out && !solution_found) {
+                while (!solution_found) {
                     if (save_solution) {
                         particle_path_x.emplace_back(cell.getX());
                         particle_path_y.emplace_back(cell.getY());
                     }
-                    int random = rng.uniform(0, cell.getPossibleDirectionsCount());
+                    int random = int(dis(rng) * cell.getPossibleDirectionsCount());
                     try {
                         cell = maze.move(cell, cell.getDirectionFromIndex(random));
                     }
                     catch (OutOfMazeException &e) {
-                        out = true;
                         solution_found = true;
-                        bool has_lock = false;
-                        #pragma omp critical
-                        {
-                            if (!solution_found_lock) {
-                                solution_found_lock = true;
-                                has_lock = true;
-                            }
+                        endTime = std::chrono::high_resolution_clock::now();
+                        bool is_first;
+                        #ifdef _OPENMP
+                        omp_set_lock(&solution_found_write);
+                        #endif
+                        if (!first_to_find_solution) {
+                            first_to_find_solution = true;
+                            is_first = true;
                         }
-                        if (has_lock) {
-                            endTime = std::chrono::high_resolution_clock::now();
+                        #ifdef _OPENMP
+                        omp_unset_lock(&solution_found_write);
+                        #endif
+
+                        if (is_first) {
                             std::cout << "Run " << run << ", Thread " << getThreadNumber() << ", particle " << i;
                             double s = (double)std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count() / 1000000000;
                             std::cout << "\t " << s << "s" << std::endl;
