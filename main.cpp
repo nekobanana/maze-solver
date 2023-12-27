@@ -30,6 +30,8 @@ int main(int argc, char* argv[]) {
     #ifndef _OPENMP
     n_particles = 1;
     #endif
+    std::cout << std::endl << "-p " << n_particles << " -t " << n_threads << " -r " << n_runs << "...";
+    std::cout.flush();
     std::string out_file_nme = std::string("results/") + std::to_string(n_threads) +  std::string("_threads_") + \
         std::to_string(n_particles) + std::string("_p.txt");
 
@@ -62,10 +64,11 @@ int main(int argc, char* argv[]) {
         for (int run = 0; run < n_runs; run++) {
             bool solution_found = false;
             bool first_to_find_solution = false;
+            const int max_time =  static_cast<int>(0.000015 * exp(0.0726 * maze.getCellsPerRow()) + 10);
             auto startTime = std::chrono::high_resolution_clock::now();
             #pragma omp parallel for num_threads(n_threads) default(none), firstprivate(startCell), \
             shared(solution_found, first_to_find_solution, maze, std::cout, startTime, run, maze_sum_run_time, \
-            n_particles, n_runs, save_solution, solution_found_write)
+            n_particles, n_runs, save_solution, solution_found_write, max_time)
             for (int i = 0; i < n_particles; i++) {
                 auto endTime = startTime;
                 std::random_device rd;
@@ -75,12 +78,14 @@ int main(int argc, char* argv[]) {
                 Cell cell = startCell;
                 std::list<unsigned short> particle_path_x;
                 std::list<unsigned short> particle_path_y;
-                while (!solution_found) {
+                auto startParticleTime = std::chrono::high_resolution_clock::now();
+                while (!solution_found &&
+                    std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - startParticleTime).count() < max_time) {
                     if (save_solution) {
                         particle_path_x.emplace_back(cell.getX());
                         particle_path_y.emplace_back(cell.getY());
                     }
-                    int random = int(dis(rng) * cell.getPossibleDirectionsCount());
+                    int random = static_cast<int>(dis(rng) * cell.getPossibleDirectionsCount());
                     try {
                         cell = maze.move(cell, cell.getDirectionFromIndex(random));
                     }
@@ -101,7 +106,7 @@ int main(int argc, char* argv[]) {
 
                         if (is_first) {
                             std::cout << "Run " << run << ", Thread " << getThreadNumber() << ", particle " << i;
-                            double s = (double)std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count() / 1000000000;
+                            double s = static_cast<double>(std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count()) / 1000000000;
                             std::cout << "\t " << s << "s" << std::endl;
                             maze_sum_run_time += s;
                             if (save_solution && run == n_runs - 1) {
@@ -117,7 +122,7 @@ int main(int argc, char* argv[]) {
     }
     std::cout << std::endl << "Mazes total average run time:" << mazes_total_sum_run_time / images.size() << std::endl;
     std::cout.rdbuf(coutbuf); //reset to standard output again
-    std::cout << "DONE";  //output to the standard input
+    std::cout << " DONE";  //output to the standard input
 
     return 0;
 }
