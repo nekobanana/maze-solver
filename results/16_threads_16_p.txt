@@ -1,0 +1,134 @@
+_OPENMP defined
+[ INFO:0@0.111] global registry_parallel.impl.hpp:96 ParallelBackendRegistry core(parallel): Enabled backends(3, sorted by priority): ONETBB(1000); TBB(990); OPENMP(980)
+
+Maze "210.png", 210x210
+Run 0, Thread 14, particle 14	 5.30525s
+Run 1, Thread 1, particle 1	 2.23117s
+Run 2, Thread 1, particle 1	 5.72409s
+Run 3, Thread 9, particle 9	 3.29175s
+Run 4, Thread 12, particle 12	 3.83009s
+Run 5, Thread 7, particle 7	 7.92504s
+Run 6, Thread 2, particle 2	 5.42459s
+Run 7, Thread 1, particle 1	 4.26478s
+Run 8, Thread 10, particle 10	 2.65093s
+Run 9, Thread 9, particle 9	 2.10625s
+Maze "210.png" average run time:4.2754
+
+Maze "50 by 50 orthogonal maze.png", 50x50
+Run 0, Thread 15, particle 15	 0.00989641s
+Run 1, Thread 7, particle 7	 0.00829502s
+Run 2, Thread 3, particle 3	 0.0203691s
+Run 3, Thread 2, particle 2	 0.042923s
+Run 4, Thread 11, particle 11	 0.0102219s
+Run 5, Thread 10, particle 10	 0.0105471s
+Run 6, Thread 8, particle 8	 0.0278547s
+Run 7, Thread 1, particle 1	 0.0165839s
+Run 8, Thread 12, particle 12	 0.0075831s
+Run 9, Thread 14, particle 14	 0.00457217s
+Maze "50 by 50 orthogonal maze.png" average run time:0.0158847
+
+Maze "240.png", 240x240
+Run 0, Thread 9, particle 9	 2.75675s
+Run 1, Thread 1, particle 1	 2.27582s
+Run 2, Thread 4, particle 4	 13.2664s
+Run 3, Thread 12, particle 12	 3.87029s
+Run 4, Thread 8, particle 8	 4.40188s
+Run 5, Thread 6, particle 6	 6.43274s
+Run 6, Thread 6, particle 6	 5.10456s
+Run 7, Thread 0, particle 0	 8.26467s
+Run 8, Thread 6, particle 6	 3.90116s
+Run 9, Thread 12, particle 12	 5.34741s
+Maze "240.png" average run time:5.56217
+
+Maze "220.png", 220x220
+Run 0, Thread 15, particle 15	 2.26943s
+Run 1, Thread 6, particle 6	 5.37093s
+Run 2, Thread 15, particle 15	 3.7705s
+Run 3, Thread 8, particle 8	 4.07761s
+Run 4, Thread 9, particle 9	 5.22464s
+Run 5, Thread 1, particle 1	 3.0658s
+Run 6, Thread 9, particle 9	 8.11665s
+Run 7, Thread 1, particle 1	 5.87698s
+Run 8, Thread 11, particle 11	 5.93355s
+Run 9, Thread 0, particle 0	 6.60004s
+Maze "220.png" average run time:5.03061
+
+Maze "100 by 100 orthogonal maze.png", 100x100
+Run 0, Thread 10, particle 10	 0.0195734s
+Run 1, Thread 1, particle 1	 0.0356017s
+Run 2, Thread 8, particle 8	 0.0130773s
+Run 3, Thread 10, particle 10	 0.0187658s
+Run 4, Thread 1, particle 1	 0.0869255s
+Run 5, Thread 0, particle 0	 0.0928551s
+Run 6, Thread 11, particle 11	 0.124082s
+Run 7, Thread 5, particle 5	 0.127965s
+Run 8, Thread 8, particle 8	 0.0299806s
+Run 9, Thread 4, particle 4	 0.0628818s
+Maze "100 by 100 orthogonal maze.png" average run time:0.0611709
+
+Maze "230.png", 230x230
+Run 0, Thread 15, particle 15	 2.19864s
+Run 1, Thread 11, particle 11	 7.43495s
+Run 2, Thread 14, particle 14	 8.52604s
+Run 3, Thread 3, particle 3	 2.92091s
+Run 4, Thread 0, particle 0	 5.68016s
+Run 5, Thread 15, particle 15	 5.67803s
+Run 6, Thread 2, particle 2	 1.67618s
+Run 7, Thread 8, particle 8	 5.89863s
+Run 8, Thread 8, particle 8	 5.93978s
+Run 9, Thread 0, particle 0	 1.91091s
+Maze "230.png" average run time:4.78642
+
+Maze "20 by 20 orthogonal maze.png", 20x20
+Run 0, Thread 9, particle 9	 0.00108335s
+Run 1, Thread 15, particle 15	 0.000709988s
+Run 2, Thread 5, particle 5	 0.000200154s
+Run 3, Thread 2, particle 2	 0.000942375s
+Run 4, Thread 6, particle 6	 0.000388955s
+Run 5, Thread 12, particle 12	 0.000305553s
+Run 6, Thread 8, particle 8	 0.000945075s
+Run 7, Thread 8, particle 8	 0.000279902s
+Run 8, Thread 7, particle 7	 0.000714809s
+Run 9, Thread 6, particle 6	 0.000883408s
+Maze "20 by 20 orthogonal maze.png" average run time:0.000645357
+
+Maze "250.png", 250x250
+Run 0, Thread 15, particle 15	 26.625s
+Run 1, Thread 11, particle 11	 24.246s
+Run 2, Thread 1, particle 1	 39.6313s
+Run 3, Thread 1, particle 1	 24.2744s
+Run 4, Thread 0, particle 0	 27.283s
+Run 5, Thread 4, particle 4	 34.4934s
+Run 6, Thread 15, particle 15	 24.0225s
+Run 7, Thread 13, particle 13	 38.2111s
+Run 8, Thread 5, particle 5	 20.3737s
+Run 9, Thread 14, particle 14	 21.0322s
+Maze "250.png" average run time:28.0193
+
+Maze "200 by 200 orthogonal maze.png", 200x200
+Run 0, Thread 8, particle 8	 0.24126s
+Run 1, Thread 10, particle 10	 0.318588s
+Run 2, Thread 13, particle 13	 0.212145s
+Run 3, Thread 2, particle 2	 0.480913s
+Run 4, Thread 6, particle 6	 0.0818052s
+Run 5, Thread 7, particle 7	 0.35722s
+Run 6, Thread 6, particle 6	 1.58538s
+Run 7, Thread 12, particle 12	 0.399467s
+Run 8, Thread 4, particle 4	 0.44288s
+Run 9, Thread 7, particle 7	 0.527388s
+Maze "200 by 200 orthogonal maze.png" average run time:0.464705
+
+Maze "150 by 150 orthogonal maze.png", 150x150
+Run 0, Thread 14, particle 14	 0.222187s
+Run 1, Thread 2, particle 2	 0.38105s
+Run 2, Thread 4, particle 4	 0.406184s
+Run 3, Thread 15, particle 15	 0.300806s
+Run 4, Thread 1, particle 1	 0.660654s
+Run 5, Thread 11, particle 11	 0.430721s
+Run 6, Thread 2, particle 2	 0.156656s
+Run 7, Thread 15, particle 15	 0.845254s
+Run 8, Thread 13, particle 13	 0.117065s
+Run 9, Thread 11, particle 11	 0.203148s
+Maze "150 by 150 orthogonal maze.png" average run time:0.372372
+
+Mazes total average run time:4.85886
