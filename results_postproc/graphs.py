@@ -12,7 +12,7 @@ def graphs_fixed_n_particles(df, n_particles):
         maze_size = maze_df["maze_size"].iloc[0]
         maze_df.plot(x="n_threads", y="execution_time", kind="scatter",
                      title=f"Maze {maze_size}, {n_particles=}",
-                     xticks=np.concatenate((np.array([1]), np.arange(0, 22, 2))))
+                     xticks=np.concatenate((np.array([1]), np.arange(0, 32, 2))))
         plt.savefig(f"plots/maze_{maze_size}_{n_particles=}.png")
 
 def graphs_linear_n_particles(df):
@@ -22,7 +22,7 @@ def graphs_linear_n_particles(df):
         maze_size = maze_df["maze_size"].iloc[0]
         maze_df.plot(x="n_threads", y="execution_time", kind="scatter",
                      title=f"Maze {maze_size}, n_particles=n_threads",
-                     xticks=np.concatenate((np.array([1]), np.arange(0, 22, 2))))
+                     xticks=np.concatenate((np.array([1]), np.arange(0, 32, 2))))
         plt.savefig(f"plots/maze_{maze_size}_n_particles=n_threads.png")
 
 
@@ -34,7 +34,7 @@ def graphs_all_particles_and_speedup(df):
         plt.figure()
         maze_df.plot(x="n_threads", y="execution_time", kind="scatter",
                      title=f"Maze {maze_size}",
-                     xticks=np.concatenate((np.array([1]), np.arange(0, 22, 2))))
+                     xticks=np.concatenate((np.array([1]), np.arange(0, 32, 2))))
         plt.savefig(f"plots/maze_{maze_size}.png")
         plt.close()
 
@@ -44,7 +44,7 @@ def graphs_all_particles_and_speedup(df):
         speedup = sequential_exec_time / maze_df["execution_time"]
         plt.scatter(maze_df["n_threads"], speedup, color="orange")
         plt.title(f"Speedup maze {maze_size}")
-        plt.xticks(np.concatenate((np.array([1]), np.arange(0, 22, 2))))
+        plt.xticks(np.concatenate((np.array([1]), np.arange(0, 32, 2))))
         for t, s in zip(maze_df["n_threads"], speedup):
             ax.annotate(f"  {s:.2}", xy=(t, s), xytext=(t, s), xycoords='data')
         plt.savefig(f"plots/speedup_maze_{maze_size}.png")
