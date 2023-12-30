@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.26)
 project(maze_solver)
-set(OPENMP true)
-#set(OPENMP false)
+#set(OPENMP true)
+set(OPENMP false)
 
 set(CMAKE_CXX_STANDARD 17)
 

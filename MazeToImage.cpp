@@ -3,7 +3,8 @@
 #include <filesystem>
 #include "Maze.h"
 
-void Maze::save_solution_image(const std::list<unsigned short>& points_x, const std::list<unsigned short>& points_y) {
+void Maze::save_solution_image(const std::list<unsigned short>& points_x, const std::list<unsigned short>& points_y,
+                               std::string file_name) {
     cv::Mat image = orig_image.clone();
     cv::cvtColor(orig_image, image, cv::COLOR_GRAY2BGR);
     int thickness = 2;
@@ -21,5 +22,7 @@ void Maze::save_solution_image(const std::list<unsigned short>& points_x, const 
         prev_x = x;
         prev_y = y;
     }
-    cv::imwrite((std::filesystem::path(output_folder) / image_name).string(), image);
+    if (file_name.empty())
+        file_name = image_name;
+    cv::imwrite((std::filesystem::path(output_folder) / file_name).string(), image);
 }

@@ -35,7 +35,8 @@ public:
     Cell getStartCell();
     bool isStartSet() const;
     Cell getCell(int x, int y);
-    void save_solution_image(const std::list<unsigned short>& points_x, const std::list<unsigned short>& points_y);
+    void save_solution_image(const std::list<unsigned short> &points_x, const std::list<unsigned short> &points_y,
+                             std::string file_name = "");
     int getCellsPerRow() const;
     int getCellsPerCol() const;
 
