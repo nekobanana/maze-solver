@@ -21,24 +21,6 @@ int get_arg(const std::string& arg_name, int argc, char* argv[]) {
     }
     return 0;
 }
-bool printed = false;
-int64_t getElapsedTimeSeconds(
-        const std::chrono::time_point<
-                std::chrono::system_clock, std::chrono::duration<long, std::ratio<1, 1000000000>>> &startParticleTime) {
-    return std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - startParticleTime).count();
-    //    auto result = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - startParticleTime).count();
-//    if (result % 5 == 0) {
-//        if (!printed) {
-//            std::cout << result << " ";
-//            std::cout.flush();
-//            printed = true;
-//        }
-//    }
-//    else {
-//        printed = false;
-//    }
-//    return result;
-}
 
 int main(int argc, char* argv[]) {
     int n_particles = get_arg("p", argc, argv);
@@ -80,19 +62,16 @@ int main(int argc, char* argv[]) {
                   << maze.getCellsPerRow() << "x" << maze.getCellsPerCol() << std::endl;
         for (int run = 0; run < n_runs; run++) {
             bool solution_found = false;
-            bool first_to_find_solution = false;
-//            const int max_time =  static_cast<int>(0.000015 * exp(0.0726 * maze.getCellsPerRow()) + 10);
+            bool solution_found_locked = false;
             auto startTime = std::chrono::high_resolution_clock::now();
             #pragma omp parallel for num_threads(n_threads) default(none), firstprivate(startCell), \
-            shared(solution_found, first_to_find_solution, maze, std::cout, startTime, run, maze_sum_run_time, \
+            shared(solution_found, solution_found_locked, maze, std::cout, startTime, run, maze_sum_run_time, \
             n_particles, n_runs, save_solution, solution_found_write)
             for (int i = 0; i < n_particles; i++) {
                 auto endTime = startTime;
                 std::random_device rd;
                 std::mt19937 rng(rd());
                 std::uniform_real_distribution<> dis(0, 1);
-//                std::cout << " p: " << i <<" ";
-//                std::cout.flush();
                 Cell cell = startCell;
                 std::list<unsigned short> particle_path_x;
                 std::list<unsigned short> particle_path_y;
@@ -113,8 +92,8 @@ int main(int argc, char* argv[]) {
                         #ifdef _OPENMP
                         omp_set_lock(&solution_found_write);
                         #endif
-                        if (!first_to_find_solution) {
-                            first_to_find_solution = true;
+                        if (!solution_found_locked) {
+                            solution_found_locked = true;
                             is_first = true;
                         }
                         #ifdef _OPENMP
@@ -125,7 +104,6 @@ int main(int argc, char* argv[]) {
                             std::cout << "Run " << run << ", Thread " << getThreadNumber() << ", particle " << i;
                             double s = static_cast<double>(std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count()) / 1000000000;
                             std::cout << "\t " << s << "s" << std::endl;
-//                            std::cout.flush();
                             maze_sum_run_time += s;
                             if (save_solution && run == n_runs - 1) {
                                 maze.save_solution_image(particle_path_x, particle_path_y);
@@ -133,12 +111,6 @@ int main(int argc, char* argv[]) {
                         }
                     }
                 }
-//                if (getElapsedTimeSeconds(startParticleTime) > max_time) {
-//                    std::cout << "MAX_TIME_EXCEEDED " << std::endl;
-//                    std::cout.flush();
-//                    maze.save_solution_image(particle_path_x, particle_path_y,
-//                                              "r_" + std::to_string(run)  + "_p_" + std::to_string(i) + ".png");
-//                }
             }
         }
         std::cout << "Maze " << maze_path.filename() << " average run time:" << maze_sum_run_time / n_runs << std::endl;
