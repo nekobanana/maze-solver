@@ -120,6 +120,9 @@ int main(int argc, char* argv[]) {
     std::cout.rdbuf(coutbuf); //reset to standard output again
     std::cout << " DONE";  //output to the standard input
 
+    #ifdef _OPENMP
+    omp_destroy_lock(&solution_found_write);
+    #endif
     return 0;
 }
 
